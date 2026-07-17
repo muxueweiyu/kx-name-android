@@ -1,0 +1,23 @@
+# ==========================================
+# 江湖大侠 Android 项目 Git 忽略配置 (.gitignore)
+# ==========================================
+
+# macOS/Windows 系统缓存
+.DS_Store
+Thumbs.db
+*.log
+.temp/
+
+# Android 编译与缓存忽略
+.gradle/
+local.properties
+.idea/
+.cxx/
+app/build/
+build/
+**/build/
+**/.gradle/
+
+# 打包生成的安装包产物（通过 Actions/Releases 下载，不进代码库历史）
+*.apk
+build-output/
