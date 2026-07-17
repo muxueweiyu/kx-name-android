@@ -6,7 +6,7 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS) # 改为允许柔性读取配置
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS) // 改为允许柔性读取配置
     repositories {
         google()
         mavenCentral()
