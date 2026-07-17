@@ -22,18 +22,15 @@ jobs:
         java-version: '17'
         cache: 'gradle'
 
-    - name: 3. 授权 gradlew 可执行权限 (已去掉上一级目录前缀)
-      run: chmod +x gradlew
+    - name: 3. 编译打包 Debug APK (使用 GitHub 全局 Gradle)
+      run: gradle assembleDebug
 
-    - name: 4. 编译打包 Debug APK (直接在根目录运行)
-      run: ./gradlew assembleDebug
-
-    - name: 5. 提取并重命名 APK 文件
+    - name: 4. 提取并重命名 APK 文件
       run: |
         mkdir -p build-output
         cp app/build/outputs/apk/debug/app-debug.apk build-output/江湖大侠-Android-Debug.apk
 
-    - name: 6. 上传 APK 到 GitHub Artifacts
+    - name: 5. 上传 APK 到 GitHub Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: 江湖大侠-Android-APK
