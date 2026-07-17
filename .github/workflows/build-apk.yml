@@ -3,9 +3,13 @@ name: Build Android APK (江湖大侠)
 on:
   push:
     branches: [ "main", "master" ]
+    tags: [ "v*" ] # 关键：当推送形如 v1.0.0, v1.0.1 等版本标签时触发
   pull_request:
     branches: [ "main", "master" ]
   workflow_dispatch:
+
+permissions:
+  contents: write # 关键：赋予 GitHub Actions 在你的仓库写入/修改 Releases 的权限
 
 jobs:
   build:
@@ -21,7 +25,7 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: 3. 安装并指定兼容的 Gradle 7.5 版本 (防止新版 Gradle 9 冲突)
+    - name: 3. 安装并指定兼容的 Gradle 7.5 版本
       uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: 7.5
@@ -34,9 +38,18 @@ jobs:
         mkdir -p build-output
         cp app/build/outputs/apk/debug/app-debug.apk build-output/江湖大侠-Android-Debug.apk
 
-    - name: 6. 上传 APK 到 GitHub Artifacts
+    - name: 6. 上传 APK 到 GitHub Artifacts (常规测试备份)
       uses: actions/upload-artifact@v4
       with:
         name: 江湖大侠-Android-APK
         path: build-output/江湖大侠-Android-Debug.apk
         retention-days: 7
+
+    - name: 7. 自动将 APK 发布到 GitHub Releases (仅在推送版本 Tag 时执行)
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: build-output/江湖大侠-Android-Debug.apk
+        body: "这是由 GitHub Actions 云端自动编译并发布的安卓客户端安装包。"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
