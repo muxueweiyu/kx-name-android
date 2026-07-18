@@ -55,7 +55,10 @@ public class MainActivity extends Activity {
                         "})()";
                 
                 webView.evaluateJavascript(checkLoginJS, value -> {
-                    boolean isLoggedIn = "true".equals(value);
+                    // 打印日志便于 Logcat 实时排查
+                    android.util.Log.d("GameShell", "Login check result: " + value);
+                    // 兼容带双引号的 JSON String 格式（例如某些 WebKit 会序列化为 "\"true\""）
+                    boolean isLoggedIn = value != null && (value.equals("true") || value.equals("\"true\"") || value.contains("true"));
                     updateButtonVisibility(isLoggedIn);
                 });
             }
@@ -203,6 +206,7 @@ public class MainActivity extends Activity {
         });
 
         rootLayout.addView(floatButton);
+        floatButton.bringToFront(); // 强行将悬浮按钮置于最上层，防止被 WebView 遮挡
         setContentView(rootLayout);
 
         // 9. 载入游戏网页地址
